@@ -34,7 +34,7 @@ export const signup = async (req, res) => {
       return res.status(201).json({
         _id: newUser._id,
         fullName: newUser.fullName,
-        email: newUser.em,
+        email: newUser.email,
         profilePic: newUser.profilePic
       })
     } else {
@@ -46,10 +46,41 @@ export const signup = async (req, res) => {
   }
 }
 
-export const login = (req, res) => {
-  res.send('signup route')
+export const login = async (req, res) => {
+  // console.log(req.body);
+  const { email, password } = req.body
+  try {
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      return res.status(400).json({ message: '该邮箱还未注册' })
+    }
+
+    const isOk = await bcrypt.compare(password, user.password)
+    if (!isOk) {
+      return res.status(400).json({ message: '密码错误' })
+    }
+
+    generateToken(user._id, res)
+
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      email,
+      profilePic: user.profilePic
+    })
+  } catch (error) {
+    console.log('error in login controller：', error.message);
+    res.status(500).json({ message: 'Internal Server Error' })
+  }
 }
 
 export const logout = (req, res) => {
-  res.send('signup route')
+  try {
+    res.cookie("jwt", "", { maxAge: 0 })
+    res.status(200).json({ message: '操作成功' })
+  } catch (error) {
+    console.log('error in logout controller：', error.message);
+    res.status(500).json({ message: 'Internal Server Error' })
+  }
 }
