@@ -1,3 +1,4 @@
+import cloudinary from 'cloudinary'
 import User from '../models/user.model.js'
 import Message from '../models/message.model.js'
 
@@ -15,11 +16,48 @@ export const getUsersForSidebar = async (req, res) => {
 export const getMessages = async (req, res) => {
   try {
     const { id: userToChatId } = req.params
-    const senderId = req.user._id 
+    const myId = req.user._id 
 
-    const messages = await User.find({ senderId, receiverId: userToChatId })
+    // 获取两个用户之间的信息
+    const messages = await Message.find({
+      $or: [
+        { senderId: myId, receiverId: userToChatId },
+        { senderId: userToChatId, receiverId: myId }
+      ]
+    })
+
+    res.status(200).json(messages)
   } catch (error) {
     console.log('error in getMessages controller：', error.message);
+    res.status(500).json({ message: 'Internal Server Error' })
+  }
+}
+
+export const sendMessage = async (req, res) => {
+  try {
+    const { text, image } = req.body
+    const { id: receiverId } = req.params
+    const senderId = req.user._id
+
+    let imageUrl
+    if(image) {
+      await cloudinary.uploader.upload(image)
+      imageUrl = result.secure_url
+    }
+
+    const newMessage = new Message({
+      senderId,
+      receiverId,
+      text,
+      image: imageUrl
+    })
+    await Message.save()
+
+    // socket.io 实现实时性的聊天
+
+    res.status(201).json(newMessage)
+  } catch (error) {
+    console.log('error in sendMessage controller：', error.message);
     res.status(500).json({ message: 'Internal Server Error' })
   }
 }
