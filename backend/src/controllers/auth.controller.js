@@ -1,6 +1,7 @@
 import User from '../models/user.model.js'
 import bcrypt from 'bcryptjs'
 import { generateToken } from '../lib/utils.js'
+import cloudinary from '../lib/cloudinary.js'
 
 export const signup = async (req, res) => {
   const { email, fullName, password } = req.body
@@ -78,9 +79,35 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 })
-    res.status(200).json({ message: '操作成功' })
+    res.status(200).json({ message: '用户登出成功' })
   } catch (error) {
     console.log('error in logout controller：', error.message);
+    res.status(500).json({ message: 'Internal Server Error' })
+  }
+}
+
+export const updateProfile = (req, res) => {
+  const { profilePic } = req.body
+try {
+  const userId = req.user._id
+  if(!profilePic)   return res.status(400).json({ message: '上传的图片不可为空' })
+  
+  const uploadRes = cloudinary.uploader.upload(profilePic, async (err, result) => {
+    if(err)  return res.status(500).json({ message: 'cloudinary上传profilePic失败' })
+    // 返回更新后的数据
+    const upadteUser = await User.findByIdAndUpdate(userId, { profilePic: result.secure_url }, { new: true })
+    return res.status(200).json(upadteUser)
+  })
+} catch (error) {
+  console.log('error in updateProfile controller：', error.message);
+  res.status(500).json({ message: 'Internal Server Error' })
+}}
+
+export const checkAuth = (req, res) => {
+  try {
+    res.status(200).json(req.user)
+  } catch (error) {
+    console.log('error in checkAuth controller：', error.message);
     res.status(500).json({ message: 'Internal Server Error' })
   }
 }
