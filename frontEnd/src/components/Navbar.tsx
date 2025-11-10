@@ -16,19 +16,19 @@ const Navbar = () => {
       </Link>
 
       {/* right side */}
-      <div className='flex items-center gap-2 text-sm font-medium'>
+      <div className='flex items-center gap-4 text-sm font-medium'>
         <Link to='/setting' className='btn btn-sm hover:text-violet-900'>
-          <SettingOutlined className='w-4 h-4' />
+          <SettingOutlined className='w-5 h-4' />
           <span className='hidden sm:inline'>设置</span>
         </Link>
         {authUser && (
           <>
             <Link to='/profile' className='btn btn-sm hover:text-violet-900'>
-              <UserOutlined className='w-4 h-4' />
+              <UserOutlined className='w-5 h-4' />
               <span className='hidden sm:inline'>修改资料</span>
             </Link>
             <div onClick={ logout } className='btn btn-sm hover:text-violet-900'>
-              <LogoutOutlined className='w-4 h-4' />
+              <LogoutOutlined className='w-5 h-4' />
               <span className='hidden sm:inline'>退出</span>
             </div>
           </>

@@ -1,17 +1,11 @@
 import { 
   checkAuth as checkAuthApi,
-  logout as logoutApi,
-  signUp as signUpApi
+  signUp as signUpApi,
+  login as loginApi,
+  logout as logoutApi
 } from '../api'
-import type { RegisterUser } from "../types/user"
+import type { RegisterUser, LoginUser, AuthUser } from "../types/user"
 import { create } from "zustand"
-
-type AuthUser = {
-  _id: string,
-  fullName: string,
-  email: string,
-  profilePic: string,
-}
 
 interface AuthState {
   authUser: AuthUser | null
@@ -21,6 +15,7 @@ interface AuthState {
   isCheckingAuth: boolean
   checkAuth: () => Promise<void>,
   signUp: (data: RegisterUser) => Promise<void>,
+  login: (data: LoginUser) => Promise<void>,
   logout: () => Promise<void>
 }
 
@@ -50,9 +45,23 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       await signUpApi(data)
     } catch (error) {
-      console.log('Error in checkAuth：', error)
+      console.log('Error in signup：', error)
     } finally {
       set({ isSigningUp: false })
+    }
+  },
+
+  login: async (data: LoginUser) => {
+    set({ isLogging: true })
+    try {
+      const res = await loginApi(data)
+      set({ authUser: res.data })
+      
+      // localStorage.setItem('jwt')
+    } catch (error) {
+      console.log('Error in login', error)
+    } finally {
+      set({ isLogging: false })
     }
   },
 

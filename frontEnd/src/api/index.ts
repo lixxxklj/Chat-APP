@@ -1,5 +1,5 @@
 import request from '../lib/request'
-import type { RegisterUser } from '../types/user'
+import type { RegisterUser, LoginUser } from '../types/user'
 
 export const checkAuth = () => {
   return request.get('/auth/check')
@@ -7,6 +7,10 @@ export const checkAuth = () => {
 
 export const signUp = (data: RegisterUser) => {
   return request.post('/auth/signup', data)
+}
+
+export const login = (data: LoginUser) => {
+  return request.post('/auth/login', data)
 }
 
 export const logout = () => {
