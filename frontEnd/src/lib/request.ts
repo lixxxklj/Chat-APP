@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios"
+import toast from 'react-hot-toast'
 
 const instance = axios.create({
   baseURL: 'http://localhost:5001/api',
@@ -6,4 +7,16 @@ const instance = axios.create({
   timeout: 5000
 })
 
+instance.interceptors.response.use(
+  res => res,
+  (err: AxiosError<{ message?: string}>) => {
+    if(!err.response) {
+      toast.error('网络错误或请求超时')
+      return Promise.reject(err)
+    }
+    const backendMsg = err.response.data?.message
+    toast.error(backendMsg || '请求失败')
+    return Promise.reject(err)
+  }
+)
 export default instance
