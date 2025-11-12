@@ -2,10 +2,12 @@ import {
   checkAuth as checkAuthApi,
   signUp as signUpApi,
   login as loginApi,
-  logout as logoutApi
+  logout as logoutApi,
+  profile as profileApi
 } from '../api'
 import type { RegisterUser, LoginUser, AuthUser } from "../types/user"
 import { create } from "zustand"
+import toast from 'react-hot-toast'
 
 interface AuthState {
   authUser: AuthUser | null
@@ -16,7 +18,8 @@ interface AuthState {
   checkAuth: () => Promise<void>,
   signUp: (data: RegisterUser) => Promise<void>,
   login: (data: LoginUser) => Promise<void>,
-  logout: () => Promise<void>
+  logout: () => Promise<void>,
+  updateProfile: (data: { profilePic: string }) => Promise<void>
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -40,7 +43,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  signUp: async (data: RegisterUser) => {
+  signUp: async (data) => {
     set({ isSigningUp: true })
     try {
       await signUpApi(data)
@@ -51,7 +54,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  login: async (data: LoginUser) => {
+  login: async (data) => {
     set({ isLogging: true })
     try {
       const res = await loginApi(data)
@@ -71,6 +74,19 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ authUser: null })
     } catch (error) {
       console.log('Error in logout：', error)
+    }
+  },
+  
+  updateProfile: async (data) => {
+    set({ isUpdatingProfile: true })
+    try {
+      const res = await profileApi(data)
+      set({ authUser: res.data })
+      toast.success('头像更新成功')
+    } catch (error) {
+      console.log('Error in updateProfile', error)
+    } finally {
+      set({ isUpdatingProfile: false })
     }
   }
 }))

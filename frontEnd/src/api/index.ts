@@ -16,3 +16,7 @@ export const login = (data: LoginUser) => {
 export const logout = () => {
   return request.post('/auth/logout')
 }
+
+export const profile = (data: { profilePic: string }) => {
+  return request.put('/auth/update-profile', data)
+}

@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 const instance = axios.create({
   baseURL: 'http://localhost:5001/api',
   withCredentials: true,       // 携带 Cookie / Authorization
-  timeout: 5000
+  timeout: 10000
 })
 
 instance.interceptors.response.use(

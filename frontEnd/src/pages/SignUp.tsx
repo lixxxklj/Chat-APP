@@ -13,7 +13,7 @@ const SignUp = () => {
     signUp(values)
   }
   return <div className='h-screen flex items-center justify-center'>
-    <div className='w-96 bg-base-100 shadow-xl px-8 py-4 text-center'>
+    <div className='w-96 bg-base-100 shadow-xl p-8 text-center'>
       {/* logo */}
       <div className='flex flex-col items-center justify-center mb-6'>
         <div className='flex justify-center items-center bg-violet-50 p-3 mb-2 rounded-full'>
