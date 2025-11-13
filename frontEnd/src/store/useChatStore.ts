@@ -14,8 +14,8 @@ interface ChatState {
   isMessagesLoading: boolean,
 
   getUsers: () => Promise<void>
-  getMessages: (userId: string | null) => Promise<void>
-  setSelectedUser: (user: AuthUser) => void
+  getMessages: (userId: string) => Promise<void>
+  setSelectedUser: (user: AuthUser | null) => void
 }
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -40,7 +40,8 @@ export const useChatStore = create<ChatState>((set) => ({
   getMessages: async (userId) => {
     set({ isMessagesLoading: true })
     try {
-      await getMessagesApi(userId)
+      const res = await getMessagesApi(userId)
+      set({ messages: res.data })
     } catch (error) {
       console.log('error in getMessages：', error)
     } finally {

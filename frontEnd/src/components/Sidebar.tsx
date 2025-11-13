@@ -26,8 +26,8 @@ const Sidebar = () => {
                 key={user._id}
                 onClick={() => setSelectedUser(user)}
                 className={`w-full p-3 flex items-center gap-3
-                  hover:bg-violet-300 transition-colors
-                  ${selectedUser?._id === user._id ? "bg-violet-300" : ""}`
+                  hover:bg-violet-100 transition-colors
+                  ${selectedUser?._id === user._id ? "bg-violet-200" : ""}`
                 }
               >
                 {/* 头像 + 在线标识 */}
@@ -47,7 +47,7 @@ const Sidebar = () => {
                 <div className='hidden lg:block'>
                   <div className="font-medium truncate">{user.fullName}</div>
                   <div className="text-xs text-zinc-400">
-                    {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+                    {onlineUsers.includes(user._id) ? "在线" : "离线"}
                   </div>
                 </div>
               </button>
