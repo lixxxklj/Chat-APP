@@ -16,6 +16,8 @@ interface AuthState {
   isLogging: boolean
   isUpdatingProfile: boolean
   isCheckingAuth: boolean
+  onlineUsers: string[]
+
   checkAuth: () => Promise<void>,
   signUp: (data: RegisterUser, nav: ReturnType<typeof useNavigate>) => Promise<void>,
   login: (data: LoginUser) => Promise<void>,
@@ -28,8 +30,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   isSigningUp: false,
   isLogging: false,
   isUpdatingProfile: false,
-
   isCheckingAuth: false,
+  onlineUsers: [],
 
   checkAuth: async () => { 
     set({ isCheckingAuth: true })
