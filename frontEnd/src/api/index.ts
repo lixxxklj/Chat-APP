@@ -20,3 +20,11 @@ export const logout = () => {
 export const profile = (data: { profilePic: string }) => {
   return request.put('/auth/update-profile', data)
 }
+
+export const getUsers = () => {
+  return request.get('/message/users')
+}
+
+export const getMessages = (id: string | null) => {
+  return request.get(`/message/${id}`)
+}

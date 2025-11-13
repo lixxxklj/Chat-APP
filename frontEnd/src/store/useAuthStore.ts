@@ -8,6 +8,7 @@ import {
 import type { RegisterUser, LoginUser, AuthUser } from "../types/user"
 import { create } from "zustand"
 import toast from 'react-hot-toast'
+import type { useNavigate } from 'react-router-dom'
 
 interface AuthState {
   authUser: AuthUser | null
@@ -16,7 +17,7 @@ interface AuthState {
   isUpdatingProfile: boolean
   isCheckingAuth: boolean
   checkAuth: () => Promise<void>,
-  signUp: (data: RegisterUser) => Promise<void>,
+  signUp: (data: RegisterUser, nav: ReturnType<typeof useNavigate>) => Promise<void>,
   login: (data: LoginUser) => Promise<void>,
   logout: () => Promise<void>,
   updateProfile: (data: { profilePic: string }) => Promise<void>
@@ -43,10 +44,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  signUp: async (data) => {
+  signUp: async (data, nav) => {
     set({ isSigningUp: true })
     try {
-      await signUpApi(data)
+      const res = await signUpApi(data)
+      toast.success('注册成功，请登录~')
+      nav('/login')
     } catch (error) {
       console.log('Error in signup：', error)
     } finally {

@@ -4,13 +4,15 @@ import { TwitchOutlined, UserOutlined, LockOutlined, MailOutlined } from '@ant-d
 import { Form, Input, Button } from 'antd'
 import { Link } from 'react-router-dom'
 import type { RegisterUser } from '../types/user'
+import { useNavigate } from 'react-router-dom'
 
 const SignUp = () => {
+  const nav = useNavigate()
   // 注册
   const { isSigningUp, signUp } = useAuthStore()
   // 提交
   const handleSubmit = (values: RegisterUser) => {
-    signUp(values)
+    signUp(values, nav)
   }
   return <div className='h-screen flex items-center justify-center'>
     <div className='w-96 bg-base-100 shadow-xl p-8 text-center'>
