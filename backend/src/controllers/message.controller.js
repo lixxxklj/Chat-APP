@@ -41,6 +41,7 @@ export const sendMessage = async (req, res) => {
 
     let imageUrl
     if(image) {
+      // 文件二进制或 base64
       await cloudinary.uploader.upload(image)
       imageUrl = result.secure_url
     }
@@ -51,7 +52,7 @@ export const sendMessage = async (req, res) => {
       text,
       image: imageUrl
     })
-    await Message.save()
+    await newMessage.save()
 
     // socket.io 实现实时性的聊天
 
