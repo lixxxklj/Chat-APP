@@ -42,7 +42,7 @@ export const sendMessage = async (req, res) => {
     let imageUrl
     if(image) {
       // 文件二进制或 base64
-      await cloudinary.uploader.upload(image)
+      const result = await cloudinary.uploader.upload(image)
       imageUrl = result.secure_url
     }
 
