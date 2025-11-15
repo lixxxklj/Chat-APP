@@ -1,8 +1,10 @@
 import { 
   getUsers as getUsersApi,
   getMessages as getMessagesApi,
+  sendMessages as sendMessagesAPI
 } from '../api/index'
 import type { AuthUser } from '../types/user'
+import type { MessageData } from '../types/message'
 
 import { create } from "zustand"
 
@@ -13,12 +15,13 @@ interface ChatState {
   isUsersLoading: boolean,
   isMessagesLoading: boolean,
 
-  getUsers: () => Promise<void>
-  getMessages: (userId: string) => Promise<void>
-  setSelectedUser: (user: AuthUser | null) => void
+  getUsers: () => Promise<void>,
+  getMessages: (userId: string) => Promise<void>,
+  setSelectedUser: (user: AuthUser | null) => void,
+  sendMessage: (data: MessageData) => Promise<void>
 }
 
-export const useChatStore = create<ChatState>((set) => ({
+export const useChatStore = create<ChatState>((set, get) => ({
   messages: [],
   users: [],
   selectedUser: null,
@@ -49,5 +52,15 @@ export const useChatStore = create<ChatState>((set) => ({
     }
   },
 
-  setSelectedUser: (user) => set({ selectedUser: user })
+  setSelectedUser: (user) => set({ selectedUser: user }),
+
+  sendMessage: async (data) => {
+    const { selectedUser, messages } = get()
+    try {
+      const res = await sendMessagesAPI(selectedUser?._id || '', data)
+      set({ messages: [...messages, res.data] })
+    } catch (error) {
+      console.log('error in sendMessage：', error)
+    }
+  }
 }))

@@ -1,5 +1,6 @@
 import request from '../lib/request'
 import type { RegisterUser, LoginUser } from '../types/user'
+import type { MessageData } from '../types/message'
 
 export const checkAuth = () => {
   return request.get('/auth/check')
@@ -27,4 +28,8 @@ export const getUsers = () => {
 
 export const getMessages = (id: string | null) => {
   return request.get(`/message/${id}`)
+}
+
+export const sendMessages = (id: string, data: MessageData) => {
+  return request.post(`/message/send/${id}`, data)
 }
