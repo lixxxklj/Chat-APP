@@ -38,7 +38,7 @@ const Login = () => {
               { type: 'email', message: '邮箱格式不正确' }
             ]}
           >
-            <Input placeholder='email' prefix={<MailOutlined />} />
+            <Input placeholder='you@example.com' prefix={<MailOutlined />} />
           </Form.Item>
           <Form.Item 
             label="密码" 

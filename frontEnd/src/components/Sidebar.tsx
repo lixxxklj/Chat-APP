@@ -7,6 +7,7 @@ import SidebarSkeleton from './skeletons/SidebarSkeleton'
 const Sidebar = () => {
   const { users, getUsers, selectedUser, setSelectedUser, isUsersLoading } = useChatStore()
   const { onlineUsers } = useAuthStore()
+  // console.log(onlineUsers);
 
   useEffect(() => {
     getUsers()
@@ -14,7 +15,7 @@ const Sidebar = () => {
 
   return (
     <aside className='flex flex-col h-full transition-all duration-1000'>
-      <div className="flex items-center gap-2">
+      <div className="flex p-4 items-center gap-2">
         <UsergroupDeleteOutlined style={{ fontSize: 21 }} />
         <span className="text-sm hidden lg:block">联系人</span>
       </div>
@@ -25,7 +26,7 @@ const Sidebar = () => {
               <button
                 key={user._id}
                 onClick={() => setSelectedUser(user)}
-                className={`w-full py-3 flex items-center gap-3
+                className={`w-full p-3 flex items-center gap-3
                   hover:bg-violet-100 transition-colors
                   ${selectedUser?._id === user._id ? "bg-violet-200" : ""}`
                 }

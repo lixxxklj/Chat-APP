@@ -9,6 +9,7 @@ import type { RegisterUser, LoginUser, AuthUser } from "../types/user"
 import { create } from "zustand"
 import toast from 'react-hot-toast'
 import type { useNavigate } from 'react-router-dom'
+import { io, Socket } from 'socket.io-client'
 
 interface AuthState {
   authUser: AuthUser | null
@@ -17,27 +18,34 @@ interface AuthState {
   isUpdatingProfile: boolean
   isCheckingAuth: boolean
   onlineUsers: string[]
+  socket: Socket | null
 
   checkAuth: () => Promise<void>,
   signUp: (data: RegisterUser, nav: ReturnType<typeof useNavigate>) => Promise<void>,
   login: (data: LoginUser) => Promise<void>,
   logout: () => Promise<void>,
-  updateProfile: (data: { profilePic: string }) => Promise<void>
+  updateProfile: (data: { profilePic: string }) => Promise<void>,
+  connectSocket: () => void,
+  disConnectSocket: () => void
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+const BASE_URL: string = 'http://localhost:5001'
+
+export const useAuthStore = create<AuthState>((set, get) => ({
   authUser: null,
   isSigningUp: false,
   isLogging: false,
   isUpdatingProfile: false,
   isCheckingAuth: false,
   onlineUsers: [],
+  socket: null,
 
   checkAuth: async () => { 
     set({ isCheckingAuth: true })
     try {
       const res = await checkAuthApi()
       set({ authUser: res.data })
+      get().connectSocket()
     } catch (error) {
       console.log('Error in checkAuth：', error)
       set({ authUser: null })
@@ -49,7 +57,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   signUp: async (data, nav) => {
     set({ isSigningUp: true })
     try {
-      const res = await signUpApi(data)
+      await signUpApi(data)
       toast.success('注册成功，请登录~')
       nav('/login')
     } catch (error) {
@@ -65,7 +73,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       const res = await loginApi(data)
       set({ authUser: res.data })
       
-      // localStorage.setItem('jwt')
+      // 登录成功就启动 socket
+      get().connectSocket()
     } catch (error) {
       console.log('Error in login', error)
     } finally {
@@ -77,6 +86,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       await logoutApi()
       set({ authUser: null })
+      get().disConnectSocket()
     } catch (error) {
       console.log('Error in logout：', error)
     }
@@ -93,5 +103,27 @@ export const useAuthStore = create<AuthState>((set) => ({
     } finally {
       set({ isUpdatingProfile: false })
     }
+  },
+
+  connectSocket: () => {
+    const { authUser } = get()
+    // 没授权或者已连接
+    if(!authUser || get().socket?.connected)  return
+
+    const socket = io(BASE_URL, {
+      query: {
+        userId: authUser._id
+      }
+    })
+    socket.connect()
+
+    set({ socket })
+
+    // 获取在线的用户
+    socket.on('getOnlineUsers', (onlineUsersId) => {set({ onlineUsers: onlineUsersId })})
+  },
+
+  disConnectSocket: () => {
+    if(get().socket?.connected)  get().socket?.disconnect()
   }
 }))

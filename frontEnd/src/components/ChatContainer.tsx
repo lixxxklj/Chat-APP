@@ -26,12 +26,12 @@ const ChatContainer = () => {
                 
                 return (
                   <div>
-                    <div className={`text-xs opacity-50 mb-1 ml-8 mr-8 ${isMe ? 'text-right' : 'text-left'}`}>
+                    <div className={`text-xs opacity-50 mb-1 mx-8 mt-4 ${isMe ? 'text-right' : 'text-left'}`}>
                       { formateTime(msg.createdAt) }
                     </div>
                     <div 
                       key={msg._id} 
-                      className={`flex ${isMe ? 'flex-row-reverse' : ''} gap-2 mb-4`}
+                      className={`flex ${isMe ? 'flex-row-reverse' : ''} gap-2`}
                     >
                       <img src={isMe ? 
                           authUser?.profilePic :

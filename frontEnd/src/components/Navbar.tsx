@@ -27,7 +27,7 @@ const Navbar = () => {
               <UserOutlined className='w-5 h-4' />
               <span className='hidden sm:inline'>修改资料</span>
             </Link>
-            <div onClick={ logout } className='btn btn-sm hover:text-violet-900'>
+            <div onClick={ logout } className='btn btn-sm hover:text-violet-900 cursor-pointer'>
               <LogoutOutlined className='w-5 h-4' />
               <span className='hidden sm:inline'>退出</span>
             </div>

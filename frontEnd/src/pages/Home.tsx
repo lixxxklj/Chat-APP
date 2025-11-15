@@ -11,7 +11,7 @@ const Home = () => {
       <div className='w-4xl lg:max-w-6xl pt-4 pb-8 px-4'>
         <div className='flex h-full gap-1'>
           {/* left-sidebar */}
-          <div className='w-20 lg:w-64 p-4 bg-white'>
+          <div className='w-20 lg:w-64 bg-white'>
             <Sidebar />
           </div>
           {/* right-message-containe */}
