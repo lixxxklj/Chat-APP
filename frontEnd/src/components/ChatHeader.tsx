@@ -7,7 +7,7 @@ const ChatHeader = () => {
   const { onlineUsers } = useAuthStore()
 
   return (
-    <div className="h-12 w-full flex items-start gap-2 p-1">
+    <div className="h-12 w-full flex items-start gap-2">
       <img 
         src={selectedUser?.profilePic || '/avatar.png'} 
         className="w-8 h-8 rounded-full object-cover"

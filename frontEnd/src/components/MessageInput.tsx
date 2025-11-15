@@ -8,7 +8,7 @@ const MessageInput = () => {
   const [text, setText] = useState('')
   const [preview, setPreview] = useState('')
   const uploadRef = useRef<any>(null)
-  const { messages, sendMessage } = useChatStore()
+  const { sendMessage } = useChatStore()
 
   const handleUpload = (file: File) => {
     // console.log(file);
