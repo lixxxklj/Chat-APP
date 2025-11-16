@@ -14,6 +14,10 @@ const io = new Server(server, {
 // 存储在线的用户
 const userSocketMap = {}   // {userId: socketId}
 
+export const getReceiverSocketId = (userId) => {
+  return userSocketMap[userId]
+}
+
 io.on("connection", (socket) => {
   // 只要一连接，就会触发该回调函数
   console.log('A User connected：', socket.id)
