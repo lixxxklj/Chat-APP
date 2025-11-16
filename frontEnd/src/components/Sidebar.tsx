@@ -1,28 +1,41 @@
 import { useChatStore } from '../store/useChatStore'
 import { useAuthStore } from '../store/useAuthStore'
 import { UsergroupDeleteOutlined } from '@ant-design/icons'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import SidebarSkeleton from './skeletons/SidebarSkeleton'
+import { Checkbox } from 'antd'
 
 const Sidebar = () => {
   const { users, getUsers, selectedUser, setSelectedUser, isUsersLoading } = useChatStore()
   const { onlineUsers } = useAuthStore()
-  // console.log(onlineUsers);
+  const [showOnlineUser, setShowOnlineUsers] = useState(false)
 
   useEffect(() => {
     getUsers()
   }, [getUsers])
 
+  const filterUser = showOnlineUser ? 
+    users.filter(u => onlineUsers.includes(u._id)) : users
+
   return (
     <aside className='flex flex-col h-full transition-all duration-1000'>
-      <div className="flex p-4 items-center gap-2">
-        <UsergroupDeleteOutlined style={{ fontSize: 21 }} />
-        <span className="text-sm hidden lg:block">联系人</span>
+      {/* header */}
+      <div className="p-4">
+        <div className='flex items-center gap-2 mb-2'>
+          <UsergroupDeleteOutlined style={{ fontSize: 21 }} />
+          <span className="text-sm hidden lg:block">联系人</span>
+        </div>
+        <div className='hidden lg:block transition-1000-ease'>
+          <Checkbox onChange={() => setShowOnlineUsers(!showOnlineUser)}>
+            显示在线好友<span className='text-gray-400 text-xs'>（{onlineUsers.length - 1} 在线）</span>
+          </Checkbox>
+        </div>
       </div>
+      {/* usersList */}
       {isUsersLoading ? <SidebarSkeleton /> :
         <div className="w-full overflow-y-auto">
           {
-            users.map(user => (
+            filterUser.map(user => (
               <button
                 key={user._id}
                 onClick={() => setSelectedUser(user)}
@@ -56,6 +69,10 @@ const Sidebar = () => {
           }
         </div>
       }
+      {/* 无user的提示 */}
+      {filterUser.length === 0 &&(
+        <div className='text-center text-gray-400 py-4'>暂无在线联系人</div>
+      )}
     </aside>
   )
 }
