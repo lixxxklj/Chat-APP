@@ -8,7 +8,6 @@ import type { MessageData } from '../types/message'
 
 import { create } from "zustand"
 import { useAuthStore } from './useAuthStore'
-import { message } from 'antd'
 
 interface ChatState {
   messages: any[],

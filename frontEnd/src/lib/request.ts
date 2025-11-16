@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios"
 import toast from 'react-hot-toast'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:5001/api',
+  baseURL: import.meta.env.MODE === 'development' ? 'http://localhost:5001/api' : '/api',
   withCredentials: true,       // 携带 Cookie / Authorization
   timeout: 10000
 })
