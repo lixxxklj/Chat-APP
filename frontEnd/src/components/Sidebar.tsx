@@ -36,7 +36,7 @@ const Sidebar = () => {
                   <img 
                     src={user.profilePic || '/avatar.png'} 
                     alt={user.fullName}
-                    className='w-9 h-9 object-cover rounded-full'
+                    className='w-10 h-10 object-cover rounded-full'
                   />
                   {
                     onlineUsers.includes(user._id) && (
